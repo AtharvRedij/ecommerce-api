@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from ecom_app.models import Product
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,3 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_is_admin(self, user):
         return user.is_staff
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
