@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from ecom_app.models import Cart
-from ecom_app.serializers import CartSerializer
+from ecom_app.serializers import CartSerializer, ViewCartSerializer
 
 
 def create_or_update_cart(request):
@@ -44,11 +44,23 @@ def create_or_update_cart(request):
         return Response({"error_message": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+def get_cart(request):
+    user_id = request.user.id
+
+    cart_items = Cart.objects.filter(
+        user_id=user_id
+    )
+
+    serializer = ViewCartSerializer(cart_items, many=True)
+
+    return Response(serializer.data)
+
+
 @api_view(['GET', 'POST'])
 def handle_cart(request):
 
     if request.method == 'GET':
-        return Response('get called')
+        return get_cart(request)
 
     elif request.method == 'POST':
         return create_or_update_cart(request)
